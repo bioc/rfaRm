@@ -1,0 +1,23 @@
+Package: rfaRm
+Type: Package
+Title: An R interface to the Rfam database
+Version: 0.99.0
+Date: 2020-04-06
+Author: Lara Selles Vidal, Rafael Ayala, Guy-Bart Stan, Rodrigo Ledesma-Amaro
+Maintainer: Lara Selles Vidal <lara.selles12@imperial.ac.uk>,
+            Rafael Ayala <r.ayala14@imperial.ac.uk>
+Description: rfaRm provides a client interface to the Rfam database of RNA 
+    families. Data that can be retrieved include RNA families, secondary 
+    structure images, covariance models, sequences within each family,
+    alignments leading to the identification of a family and secondary 
+    structures in the dot-bracket format.
+License: GPL-3
+Depends: R(>= 3.6.3)
+Imports: httr, stringi, rsvg, magick, data.table, Biostrings
+Suggests: R4RNA, treeio, knitr, BiocStyle, rmarkdown, BiocGenerics
+VignetteBuilder: knitr
+biocViews: FunctionalGenomics, DataImport, ThirdPartyClient, Visualization,
+           MultipleSequenceAlignments
+NeedsCompilation: no
+Encoding: UTF-8
+LazyData: true
