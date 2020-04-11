@@ -185,7 +185,8 @@ rfamPDBMapping <- function(rfamFamily, filename=NULL) {
                             "eValue",
                             "Bit score")
     if (is.character(filename)) {
-        write.table(PDBTable, file=file(filename), sep="\t", quote=FALSE, row.names=FALSE, col.names=TRUE)
+        write.table(PDBTable, file=file(filename), sep="\t", quote=FALSE,
+                    row.names=FALSE, col.names=TRUE)
     }
     return(PDBTable)
 }

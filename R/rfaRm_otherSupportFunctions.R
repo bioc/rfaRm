@@ -4,8 +4,9 @@
 WUSSToDB <- function(WUSSString) {
     WUSSVector <- unlist(strsplit(WUSSString, ""))
     DBVector <- character(length=length(WUSSVector))
-    for (i in 1:length(WUSSVector)) {
-        if (is.element(WUSSVector[i], c("(", "[", "<", "A", "B", "C", "D", ")", "]", ">", "a", "b", "c", "d"))) {
+    for (i in seq_len(length(WUSSVector))) {
+        if (is.element(WUSSVector[i], c("(", "[", "<", "A", "B", "C", "D", ")",
+                                        "]", ">", "a", "b", "c", "d"))) {
             DBVector[i] <- WUSSVector[i]
         }
         else if (is.element(WUSSVector[i], c("_", ":", ",", ".", "-"))) {
@@ -24,7 +25,8 @@ rfamSendSequenceSearchQuery <- function(sequence) {
     message("Running sequence search query. This might take a long time.")
     queryBody <- list(sequence, "Submit")
     names(queryBody) <- c("seq", "submit")
-    response <- POST(rfamApiSequenceSearchURL, accept_json(), body=queryBody, encode="multipart")
+    response <- POST(rfamApiSequenceSearchURL, accept_json(), body=queryBody,
+                     encode="multipart")
     return(content(response))
 }
 

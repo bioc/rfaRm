@@ -22,14 +22,16 @@ checkRfamEntry <- function(inputString) {
 }
 
 checkPlotType <- function(plotType) {
-    if(!is.element(plotType, c("cons", "fcbp", "cov", "ent", "maxcm", "norm", "rchie", "rscape", "rscape-cyk"))) {
+    if(!is.element(plotType, c("cons", "fcbp", "cov", "ent", "maxcm", "norm",
+                               "rchie", "rscape", "rscape-cyk"))) {
         stop("Unrecognized plot type")
     }
 }
 
 checkTreeLabel <- function(treeLabelType) {
     if(!is.element(treeLabelType, c("species", "acc"))) {
-        stop("Unrecognized tree labeling scheme. Please choose from species or accessions")
+        stop("Unrecognized tree labeling scheme. Please choose from species or
+             accessions")
     }
 }
 
