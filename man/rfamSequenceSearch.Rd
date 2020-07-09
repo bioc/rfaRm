@@ -15,6 +15,20 @@ rfamSequenceSearch(sequence)
   database. Should contain only standard RNA symbols (i.e., "A", "U", "G" and
   "C"), and no spaces or newlines.
   }
+  \item{fragmentsOverlap}{when a sequence larger than 10000 nucleotides is
+  provided, it is internally split into smaller fragments before using them to
+  search the Rfam database. This argument controls the number of overlapping
+  bases between consecutive fragments.
+  }
+  \item{clanCompetitionFilter}{logical indicating if results should be reduced
+  through a clan competition filter, which removes overlapping hits if they
+  belong to Rfam families of the same clan and have an overlap above a certain
+  threshold.
+  }
+  \item{clanOverlapThreshold}{number indicating the minimum overlap between two
+  hits (as a fraction of the smallest hit) to remove the hit with the worst
+  e-value if their families belong to the same Rfam clan.
+  }
 }
 \value{
 A nested list where each element of the top-level list represents a high-scoring

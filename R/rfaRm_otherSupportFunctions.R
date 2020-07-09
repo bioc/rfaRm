@@ -60,6 +60,7 @@ rfamRetrieveSequenceSearchResult <- function(responseURL) {
         stop("Sequence search has not completed")
     }
     autoparsedHits <- content(result)$hits
+    return(autoparsedHits)
     hitsList <- lapply(unlist(autoparsedHits, recursive=FALSE), function(hit) list("rfamAccession"=hit$acc,
                                                                                    "rfamID"=hit$id,
                                                                                    "bitScore"=hit$score,
@@ -68,12 +69,66 @@ rfamRetrieveSequenceSearchResult <- function(responseURL) {
                                                                                    "alignmentStartPositionQuerySequence"=hit$start,
                                                                                    "alignmentEndPositionQuerySequence"=hit$end,
                                                                                    "alignmentStartPositionHitSequence"=unlist(strsplit(hit$alignment$hit_seq, split=" +"))[2],
-                                                                                   "alignmentEndPositionHitSequence"=unlist(strsplit(hit$alignment$hit_seq, split=" +"))[4],
+                                                                                   "alignmentEndPositionHitSequence"=unlist(strsplit(hit$alignment$hit_seq, split=" +"))[length(unlist(strsplit(hit$alignment$hit_seq, split=" +")))],
                                                                                    "alignmentQuerySequence"=unlist(strsplit(hit$alignment$user_seq, split=" +"))[3],
                                                                                    "alignmentMatch"=trimws(substring(hit$alignment$match, 10), which="both"),
                                                                                    "alignmentHitSequence"=unlist(strsplit(hit$alignment$hit_seq, split=" +"))[3],
                                                                                    "alignmentSecondaryStructure"=unlist(strsplit(hit$alignment$ss, split=" +"))[2]))
     return(hitsList)
+}
+
+## Function to retrieve the complete set of clans defined in the Rfam database
+## and the families belonging to each clan.
+
+rfamGetClanDefinitions <- function() {
+    clanHTMLTable <- html_table(xml_find_all(read_html(rfamClansListURL), "//table[@id]"))
+    clanAccessions <- clanHTMLTable[[1]][,3]
+    clanDefinitions <- vector(mode="list", length=length(clanAccessions))
+    names(clanDefinitions) <- clanAccessions
+    for (clan in clanAccessions) {
+        clanFamiliesHTMLnodes <- xml_find_all(read_html(paste(rfamClanLookUpURL, clan, sep="")), "//span[@class='listItem']")
+        clanFamilies <- regmatches(clanFamiliesHTMLnodes, regexpr("RF[0123456789]{5}", clanFamiliesHTMLnodes))
+        clanDefinitions[[clan]] <- clanFamilies
+    }
+    return(clanDefinitions)
+}
+
+## Function to identify hits of a sequence search that overlap.
+
+rfamFindOverlappingHits <- function(sequenceSearchHits, threshold) {
+    querySequenceHitStarts <- as.integer(sapply(sequenceSearchHits, `[[`, "alignmentStartPositionQuerySequence"))
+    querySequenceHitEnds <- as.integer(sapply(sequenceSearchHits, `[[`, "alignmentEndPositionQuerySequence"))
+    querySequenceHitRanges <- IRanges(start=querySequenceHitStarts, end=querySequenceHitEnds)
+    hitOverlaps <- findOverlaps(querySequenceHitRanges, drop.self=TRUE, drop.redundant=TRUE)
+    overlapRegions <- pintersect(querySequenceHitRanges[queryHits(hitOverlaps)],
+                                 querySequenceHitRanges[subjectHits(hitOverlaps)])
+    overlapFractions <- width(overlapRegions)/pmin(width(querySequenceHitRanges[queryHits(hitOverlaps)]),
+                                                   width(querySequenceHitRanges[subjectHits(hitOverlaps)]))
+    overlappedHits <- as.matrix(hitOverlaps[overlapFractions >= threshold])
+    colnames(overlappedHits) <- c("Hit1", "Hit2")
+    return(overlappedHits)
+}
+
+## Function to remove overlapping hits of a sequence search that correspond
+## to Rfam families belonging to the same clan.
+
+rfamClanCompetitionFilter <- function(sequenceSearchHits, overlappedHits) {
+    keepHit <- rep(TRUE, length(sequenceSearchHits))
+    names(keepHit) <- names(sequenceSearchHits)
+    for (overlap in seq_len(nrow(overlappedHits))) {
+        hit1 <- sequenceSearchHits[[overlappedHits[overlap, 1]]]
+        hit2 <- sequenceSearchHits[[overlappedHits[overlap, 2]]]
+        clanHit1 <- names(rfamClanDefinitions[grep(hit1$rfamAccession, rfamClanDefinitions)])
+        clanHit2 <- names(rfamClanDefinitions[grep(hit2$rfamAccession, rfamClanDefinitions)])
+        if (clanHit1 == clanHit2) {
+            eValueHit1 <- hit1$eValue
+            eValueHit2 <- hit2$eValue
+            worseHit <- overlappedHits[overlap, which.max(c(eValueHit1, eValueHit2))]
+            keepHit[worseHit] <- FALSE
+        }
+    }
+    filteredHits <- sequenceSearchHits[keepHit]
+    return(filteredHits)
 }
 
 ## Function to check the query did not return an empty response.
@@ -85,3 +140,4 @@ checkEmptyResponse <- function(response) {
         }
     }
 }
+
