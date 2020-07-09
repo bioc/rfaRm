@@ -58,7 +58,7 @@ rfamSequenceSearch <- function(sequence, fragmentsOverlap=1000, clanCompetitionF
         fullResults[[fragment]] <- searchResult
     }
     fullResults <- unlist(fullResults, recursive=FALSE)
-    if (clanCompetitionFilter) {
+    if (clanCompetitionFilter & (length(fullResults) >1)) {
         overlappingHits <- rfamFindOverlappingHits(fullResults, clanOverlapThreshold)
         fullResults <- rfamClanCompetitionFilter(fullResults, overlappingHits)
     }

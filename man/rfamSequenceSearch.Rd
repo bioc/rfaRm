@@ -8,7 +8,7 @@ high-scoring hits of Rfam families with different regions of the provided
 sequence.
 }
 \usage{
-rfamSequenceSearch(sequence)
+rfamSequenceSearch(sequence, fragmentsOverlap=1000, clanCompetitionFilter=TRUE, clanOverlapThreshold=0.5)
 }
 \arguments{
   \item{sequence}{string with an RNA sequence to be searched against the Rfam

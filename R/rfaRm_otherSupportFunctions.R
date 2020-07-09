@@ -60,7 +60,6 @@ rfamRetrieveSequenceSearchResult <- function(responseURL) {
         stop("Sequence search has not completed")
     }
     autoparsedHits <- content(result)$hits
-    return(autoparsedHits)
     hitsList <- lapply(unlist(autoparsedHits, recursive=FALSE), function(hit) list("rfamAccession"=hit$acc,
                                                                                    "rfamID"=hit$id,
                                                                                    "bitScore"=hit$score,

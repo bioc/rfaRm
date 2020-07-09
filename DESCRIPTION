@@ -12,7 +12,8 @@ Description: rfaRm provides a client interface to the Rfam database of RNA
     alignments leading to the identification of a family and secondary 
     structures in the dot-bracket format.
 License: GPL-3
-Imports: httr, stringi, rsvg, magick, data.table, Biostrings, utils, rvest, xml2
+Imports: httr, stringi, rsvg, magick, data.table, Biostrings, utils, rvest, 
+         xml2, IRanges, S4Vectors
 Suggests: R4RNA, treeio, knitr, BiocStyle, rmarkdown, BiocGenerics
 VignetteBuilder: knitr
 biocViews: FunctionalGenomics, DataImport, ThirdPartyClient, Visualization,
