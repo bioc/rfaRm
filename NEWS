@@ -1,3 +1,6 @@
+Changes in version 1.1.2 (2020-07-15)
++ Fixed a bug that caused sequence searches to crash when applying clan competition filter and a match was found in the - strand
+
 Changes in version 1.1.1 (2020-07-08)
 + Added the possibility to filter hits of a sequence search by clan competition
 + Sequences larger than 10000 nucleotides can now be provided as input for sequence-based searches of the Rfam database

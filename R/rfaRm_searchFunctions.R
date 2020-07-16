@@ -23,7 +23,16 @@ rfamTextSearchFamilyAccession <- function(query) {
 rfamSequenceSearch <- function(sequence, fragmentsOverlap=1000, clanCompetitionFilter=TRUE, clanOverlapThreshold=0.5) {
     checkMultipleQuery(sequence)
     checkRNAString(sequence)
+    if (!(isTRUE(clanCompetitionFilter) | isFALSE(clanCompetitionFilter))) {
+        stop("clanCompetitionFilter value must be either TRUE or FALSE.")
+    }
+    if (clanCompetitionFilter & !(clanOverlapThreshold >= 0 & clanOverlapThreshold <= 1)) {
+        stop("clanOverlapThreshold should be a number between 0 and 1.")
+    }
     if (nchar(sequence) > 10000) {
+        if (!(is.integer(fragmentsOverlap)) | fragmentsOverlap < 1) {
+            stop("fragmentsOverlap should be a positive integer.")
+        }
         fragmentEndPoints <- c(seq(from=10000, to=nchar(sequence), by=10000-fragmentsOverlap), nchar(sequence))
         fragmentStartPoints <- seq(from=1, by=10000-fragmentsOverlap, length.out=length(fragmentEndPoints))
         splitSequence <- character(length(fragmentEndPoints))

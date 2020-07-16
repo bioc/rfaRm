@@ -97,6 +97,13 @@ rfamGetClanDefinitions <- function() {
 rfamFindOverlappingHits <- function(sequenceSearchHits, threshold) {
     querySequenceHitStarts <- as.integer(sapply(sequenceSearchHits, `[[`, "alignmentStartPositionQuerySequence"))
     querySequenceHitEnds <- as.integer(sapply(sequenceSearchHits, `[[`, "alignmentEndPositionQuerySequence"))
+    for (startPoint in seq_len(length(querySequenceHitStarts))) {
+        if (querySequenceHitStarts[startPoint] > querySequenceHitEnds[startPoint]) {
+            oldEndPoint <- querySequenceHitEnds[startPoint]
+            querySequenceHitEnds[startPoint] <- querySequenceHitStarts[startPoint]
+            querySequenceHitStarts[startPoint] <- oldEndPoint
+        }
+    }
     querySequenceHitRanges <- IRanges(start=querySequenceHitStarts, end=querySequenceHitEnds)
     hitOverlaps <- findOverlaps(querySequenceHitRanges, drop.self=TRUE, drop.redundant=TRUE)
     overlapRegions <- pintersect(querySequenceHitRanges[queryHits(hitOverlaps)],
