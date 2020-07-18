@@ -126,7 +126,7 @@ rfamClanCompetitionFilter <- function(sequenceSearchHits, overlappedHits) {
         hit2 <- sequenceSearchHits[[overlappedHits[overlap, 2]]]
         clanHit1 <- names(rfamClanDefinitions[grep(hit1$rfamAccession, rfamClanDefinitions)])
         clanHit2 <- names(rfamClanDefinitions[grep(hit2$rfamAccession, rfamClanDefinitions)])
-        if (clanHit1 == clanHit2) {
+        if (isTRUE(hit1$rfamAccession == hit2$rfamAccession || clanHit1 == clanHit2)) {
             eValueHit1 <- hit1$eValue
             eValueHit2 <- hit2$eValue
             worseHit <- overlappedHits[overlap, which.max(c(eValueHit1, eValueHit2))]
