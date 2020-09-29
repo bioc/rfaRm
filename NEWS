@@ -1,3 +1,6 @@
+Changes in version 1.1.4 (2020-09-29)
++ Changed all URLs to http to prevent issues when accessing websites via HTTPS due to a bug in OpenSSL 1.1.1
+
 Changes in version 1.1.3 (2020-07-18)
 + Fixed a bug that caused sequence searches to crash when applying clan competition filter and no associated clan was found for some Rfam families
 
