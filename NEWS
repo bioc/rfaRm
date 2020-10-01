@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 Changes in version 1.1.6 (2020-10-01)
 + Set SSL security level to 1 in Linux environment to bypass a bug in OpenSSL 1.1.1
 
+=======
+>>>>>>> 94721bdb4513fe20cb9903c336ce409015a90fa7
 Changes in version 1.1.5 (2020-09-30)
 + Reverted changes introduced in 1.1.4
 

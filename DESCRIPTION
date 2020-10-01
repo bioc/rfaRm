@@ -1,7 +1,11 @@
 Package: rfaRm
 Type: Package
 Title: An R interface to the Rfam database
+<<<<<<< HEAD
 Version: 1.1.6
+=======
+Version: 1.1.5
+>>>>>>> 94721bdb4513fe20cb9903c336ce409015a90fa7
 Date: 2020-04-06
 Author: Lara Selles Vidal, Rafael Ayala, Guy-Bart Stan, Rodrigo Ledesma-Amaro
 Maintainer: Lara Selles Vidal <lara.selles12@imperial.ac.uk>,
