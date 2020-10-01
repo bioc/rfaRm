@@ -6,9 +6,17 @@ rfamTextSearchFamilyAccession <- function(query) {
     if (!is.character(query)) {
         stop("Input query is not a string")
     }
-    result <- GET(rfamEbiApiURL,
-                  query=list(query=query,
-                             format="idlist"))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(rfamEbiApiURL,
+                                                     query=list(query=query,
+                                                                format="idlist")))
+    }
+    else {
+        result <- GET(rfamEbiApiURL,
+                      query=list(query=query,
+                                 format="idlist"))
+    }
     matchList <- unlist(stri_split_lines(content(result, as="text")))
     return(matchList[grep("^RF", matchList)])
 }

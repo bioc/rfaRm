@@ -25,8 +25,16 @@ rfamSendSequenceSearchQuery <- function(sequence) {
     message("Running sequence search query. This might take a long time.")
     queryBody <- list(sequence, "Submit")
     names(queryBody) <- c("seq", "submit")
-    response <- POST(rfamApiSequenceSearchURL, accept_json(), body=queryBody,
-                     encode="multipart")
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        response <- with_config(config=httrConfig, POST(rfamApiSequenceSearchURL, 
+                                                        accept_json(), body=queryBody,
+                                                        encode="multipart"))
+    }
+    else {
+        response <- POST(rfamApiSequenceSearchURL, accept_json(), body=queryBody,
+                         encode="multipart")
+    }
     return(content(response))
 }
 
@@ -34,7 +42,13 @@ rfamSendSequenceSearchQuery <- function(sequence) {
 ## search of the Rfam database.
 
 rfamCheckSequenceSearchQuery <- function(responseURL) {
-    response <- GET(responseURL, accept_json())
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        response <- with_config(config=httrConfig, GET(responseURL, accept_json()))
+    }
+    else {
+        response <- GET(responseURL, accept_json())
+    }
     queryStatus <- status_code(response)
     if (queryStatus == 202) {
         message("Sequence search is running, please wait.")
@@ -54,7 +68,13 @@ rfamCheckSequenceSearchQuery <- function(responseURL) {
 ## search of the Rfam database.
 
 rfamRetrieveSequenceSearchResult <- function(responseURL) {
-    result <- GET(responseURL, accept_json())
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(responseURL, accept_json()))
+    }
+    else {
+        result <- GET(responseURL, accept_json())
+    }
     queryStatus <- status_code(result)
     if (queryStatus != 200) {
         stop("Sequence search has not completed")

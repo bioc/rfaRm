@@ -6,7 +6,13 @@ rfamFamilyAccessionToID <- function(rfamFamilyAccession) {
     if (!grepl("^RF", rfamFamilyAccession)) {
         stop("Input is not a valid rfam accession")
     }
-    result <- GET(paste(rfamApiBaseURL, rfamFamilyAccession, "/id", sep="" ))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamilyAccession, "/id", sep="" )))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamilyAccession, "/id", sep="" ))
+    }
     checkEmptyResponse(result)
     return(content(result, as="text"))
 }
@@ -16,7 +22,13 @@ rfamFamilyAccessionToID <- function(rfamFamilyAccession) {
 
 rfamFamilyIDToAccession <- function(rfamFamilyID) {
     checkMultipleQuery(rfamFamilyID)
-    result <- GET(paste(rfamApiBaseURL, rfamFamilyID, "/acc", sep="" ))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamilyID, "/acc", sep="" )))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamilyID, "/acc", sep="" ))
+    }
     if(content(result, as="text") == "No such family") {
         stop("Input is not a valid rfam ID")
     }
@@ -29,8 +41,13 @@ rfamFamilyIDToAccession <- function(rfamFamilyID) {
 rfamFamilySummary <- function(rfamFamily) {
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, sep="" ),
-                  accept_json())
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, sep="" ), accept_json()))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, sep="" ), accept_json())
+    }
     checkEmptyResponse(result)
     autoparsedResult <- content(result)
     outputResult <- list("rfamReleaseNumber" = autoparsedResult$rfam$release$number,
@@ -54,7 +71,13 @@ rfamSecondaryStructureXMLSVG <- function(rfamFamily, filename=NULL, plotType="no
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
     checkPlotType(plotType)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep=""), accept_xml())
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep=""), accept_xml()))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep=""), accept_xml())
+    }
     checkEmptyResponse(result)
     svg <- content(result, as="text")
     if (is.character(filename)){
@@ -70,7 +93,13 @@ rfamSecondaryStructurePlot <- function(rfamFamily, filename=NULL, plotType="norm
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
     checkPlotType(plotType)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep=""))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep="")))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep=""))
+    }
     checkEmptyResponse(result)
     svg <- content(result)
     if (is.element(plotType, c("cons", "fcbp", "cov", "ent", "maxcm", "norm", "rchie"))) {
@@ -94,7 +123,13 @@ rfamSecondaryStructurePlot <- function(rfamFamily, filename=NULL, plotType="norm
 rfamCovarianceModel <- function(rfamFamily, filename=NULL) {
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, "/cm", sep=""))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, "/cm", sep="")))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/cm", sep=""))
+    }
     checkEmptyResponse(result)
     cmModel <- content(result, as="text")
     if (is.character(filename)) {
@@ -109,8 +144,16 @@ rfamCovarianceModel <- function(rfamFamily, filename=NULL) {
 rfamSequenceRegions <- function(rfamFamily, filename=NULL) {
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, "/regions", sep=""),
-                  accept("text"))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, 
+                                                           "/regions", sep=""),
+                                                     accept("text")))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/regions", sep=""),
+                      accept("text"))
+    }
     if (status_code(result) == 403) {
         stop("The family has too many regions to list.")
     }
@@ -135,7 +178,14 @@ rfamSequenceRegions <- function(rfamFamily, filename=NULL) {
 rfamSeedTree <- function(rfamFamily, filename) {
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, "/tree", sep=""))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, 
+                                                           "/tree", sep="")))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/tree", sep=""))
+    }
     checkEmptyResponse(result)
     seedTree <- content(result, as="text")
     write(seedTree, file=filename)
@@ -149,7 +199,15 @@ rfamSeedTreeImage <- function(rfamFamily, filename=NULL, label="species") {
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
     checkTreeLabel(label)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, "/tree/label/", label, "/image", sep=""))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, 
+                                                           "/tree/label/", label, 
+                                                           "/image", sep="")))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/tree/label/", label, "/image", sep=""))
+    }
     checkEmptyResponse(result)
     gif <- content(result)
     image <- image_read(gif)
@@ -168,8 +226,16 @@ rfamSeedTreeImage <- function(rfamFamily, filename=NULL, label="species") {
 rfamPDBMapping <- function(rfamFamily, filename=NULL) {
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, "/structures", sep=""),
-                  accept_json())
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, 
+                                                           "/structures", sep=""),
+                                                     accept_json()))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/structures", sep=""),
+                      accept_json())
+    }
     checkEmptyResponse(result)
     if (length(content(result)[[1]]) == 0){
         stop("No structures available in the PDB database for this family")
@@ -198,7 +264,14 @@ rfamSeedAlignment <- function(rfamFamily, filename=NULL, format="stockholm") {
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
     checkAlignmentFormat(format)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, "/alignment/", format, sep=""))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, 
+                                                           "/alignment/", format, sep="")))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/alignment/", format, sep=""))
+    }
     checkEmptyResponse(result)
     alignment <- content(result)
     if (is.character(filename)) {
@@ -222,7 +295,14 @@ rfamSeedAlignment <- function(rfamFamily, filename=NULL, format="stockholm") {
 rfamConsensusSecondaryStructure <- function(rfamFamily, filename=NULL, format="DB") {
     checkMultipleQuery(rfamFamily)
     checkRfamEntry(rfamFamily)
-    result <- GET(paste(rfamApiBaseURL, rfamFamily, "/alignment", sep=""))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, 
+                                                           "/alignment", sep="")))
+    }
+    else {
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/alignment", sep=""))
+    }
     checkEmptyResponse(result)
     alignment <- content(result)
     consensusSSLine <- grep("SS_cons", unlist(strsplit(alignment, "\n")), value=TRUE)
