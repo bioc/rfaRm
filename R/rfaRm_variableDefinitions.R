@@ -13,10 +13,9 @@ rfamClansListURL <- 'https://rfam.xfam.org/clans'
 ## Base URL used to retrieve the Rfam families belonging to a specific clan
 rfamClanLookUpURL <- 'https://rfam.xfam.org/clan/'
 
-## Named list where the name of each element is an Rfam clan, and each element
-## is a character vector with the Rfam families of the corresponding clan
-rfamClanDefinitions <- rfamGetClanDefinitions()
-
 ## OS
 localOS <- Sys.info()["sysname"]
 
+## Named list where the name of each element is an Rfam clan, and each element
+## is a character vector with the Rfam families of the corresponding clan
+rfamClanDefinitions <- rfamGetClanDefinitions()

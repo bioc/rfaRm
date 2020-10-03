@@ -100,12 +100,19 @@ rfamRetrieveSequenceSearchResult <- function(responseURL) {
 ## and the families belonging to each clan.
 
 rfamGetClanDefinitions <- function() {
-    clanHTMLTable <- html_table(xml_find_all(read_html(rfamClansListURL), "//table[@id]"))
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+    }
+    else {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=2")
+    }
+    clanHTMLTable <- with_config(config=httrConfig, html_table(xml_find_all(read_html(rfamClansListURL), "//table[@id]")))
     clanAccessions <- clanHTMLTable[[1]][,3]
     clanDefinitions <- vector(mode="list", length=length(clanAccessions))
     names(clanDefinitions) <- clanAccessions
     for (clan in clanAccessions) {
-        clanFamiliesHTMLnodes <- xml_find_all(read_html(paste(rfamClanLookUpURL, clan, sep="")), "//span[@class='listItem']")
+        clanFamiliesHTMLnodes <- with_config(config=httrConfig, xml_find_all(read_html(paste(rfamClanLookUpURL, clan, sep="")), 
+                                                                             "//span[@class='listItem']"))
         clanFamilies <- regmatches(clanFamiliesHTMLnodes, regexpr("RF[0123456789]{5}", clanFamiliesHTMLnodes))
         clanDefinitions[[clan]] <- clanFamilies
     }
