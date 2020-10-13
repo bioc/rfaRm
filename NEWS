@@ -1,3 +1,6 @@
+Changes in version 1.1.10 (2020-10-13)
++ Added missing item (alignmentEndPositionQuery) to the output list in the documentation of rfamSequenceSearch
+
 Changes in version 1.1.9 (2020-10-13)
 + Fixed a bug that caused sequence searches with sequences longer than 10000 bases to crash
 

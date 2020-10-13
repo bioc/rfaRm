@@ -43,6 +43,9 @@ itself, containing the following elements that describe the hit:
   \item{alignmentStartPositionQuerySequence }{Start position in the query
   sequence of the sequence region that resulted in the hit
   }
+  \item{alignmentEndPositionQuerySequence }{End position in the query
+  sequence of the sequence region that resulted in the hit
+  }
   \item{alignmentStartPositionHitSequence }{Start position in the Rfam family
   consensus sequence region with which the hit was found
   }
