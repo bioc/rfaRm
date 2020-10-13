@@ -38,7 +38,7 @@ rfamSequenceSearch <- function(sequence, fragmentsOverlap=1000, clanCompetitionF
         stop("clanOverlapThreshold should be a number between 0 and 1.")
     }
     if (nchar(sequence) > 10000) {
-        if (!(is.integer(fragmentsOverlap)) | fragmentsOverlap < 1) {
+        if (!(fragmentsOverlap%%1 == 0) | fragmentsOverlap < 1) {
             stop("fragmentsOverlap should be a positive integer.")
         }
         fragmentEndPoints <- c(seq(from=10000, to=nchar(sequence), by=10000-fragmentsOverlap), nchar(sequence))
