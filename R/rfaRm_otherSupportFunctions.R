@@ -101,7 +101,7 @@ rfamRetrieveSequenceSearchResult <- function(responseURL) {
 
 rfamGetClanDefinitions <- function() {
     clanHTMLTable <- html_table(xml_find_all(read_html(rfamClansListURL), "//table[@id]"))
-    clanAccessions <- clanHTMLTable[[1]][,3]
+    clanAccessions <- clanHTMLTable[[1]][,3][[1]]
     clanDefinitions <- vector(mode="list", length=length(clanAccessions))
     names(clanDefinitions) <- clanAccessions
     for (clan in clanAccessions) {
