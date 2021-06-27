@@ -1,0 +1,20 @@
+citHeader("To cite rfaRm in publications use:")
+
+citEntry(
+    entry  = "article",
+    title  = "rfaRm: An R client-side interface to facilitate the analysis of the Rfam database of RNA families",
+    author = personList(
+	person(given = "Lara", family = "Selles Vidal"),
+	person(given = "Rafael", family = "Ayala"),
+	person(given = "Guy-Bart", family = "Stan"),
+	person(given = "Rodrigo", family = "Ledesma-Amaro")
+        ),
+    year    = "2021",
+    journal = "PLoS ONE",
+    volume  = "16",
+    issue   = "1",
+    pages   = "e0245280",
+    doi     = "10.1371/journal.pone.0245280"
+)
+
+
