@@ -14,6 +14,10 @@ citEntry(
     volume  = "16",
     issue   = "1",
     pages   = "e0245280",
-    doi     = "10.1371/journal.pone.0245280"
+    doi     = "10.1371/journal.pone.0245280",
+    textVersion = paste("L Selles Vidal, R Ayala, GB Stan, R Ledesma-Amaro.",
+                        "rfaRm: An R client-side interface to facilitate the analysis of the Rfam database of RNA families.",
+                        "PLoS ONE 2021, 16(1):e0245280. doi: 10.1371/journal.pone.0245280")
+
 )
 
