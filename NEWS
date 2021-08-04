@@ -1,3 +1,6 @@
+Changes in version 1.5.3 (2021-08-04)
++ Updated formatting of consensus secondary structure queries to match changes made by Rfam
+
 Changes in version 1.1.10 (2020-10-13)
 + Added missing item (alignmentEndPositionQuery) to the output list in the documentation of rfamSequenceSearch
 

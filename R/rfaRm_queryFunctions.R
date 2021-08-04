@@ -305,13 +305,19 @@ rfamConsensusSecondaryStructure <- function(rfamFamily, filename=NULL, format="D
     }
     checkEmptyResponse(result)
     alignment <- content(result)
-    consensusSSLine <- grep("SS_cons", unlist(strsplit(alignment, "\n")), value=TRUE)
-    consensusSS <- unlist(strsplit(consensusSSLine, " "))[length(unlist(strsplit(consensusSSLine, " ")))]
+    consensusSSLines <- grep("SS_cons", unlist(strsplit(alignment, "\n")), value=TRUE)
+    consensusSSLines <- trimws(substring(consensusSSLines, 13))
+    #consensusSS <- unlist(strsplit(consensusSSLine, " "))[length(unlist(strsplit(consensusSSLine, " ")))]
+    #consensusSS <- unlist(strsplit(consensusSSLine, " "))[1]
+    consensusSS <- paste(consensusSSLines, collapse="")
     if (format == "DB") {
         consensusSS <- WUSSToDB(consensusSS)
     }
-    consensusSeqLine <- grep("GC RF", unlist(strsplit(alignment, "\n")), value=TRUE)
-    consensusSeq <- unlist(strsplit(consensusSeqLine, " "))[length(unlist(strsplit(consensusSeqLine, " ")))]
+    consensusSeqLines <- grep("GC RF", unlist(strsplit(alignment, "\n")), value=TRUE)
+    consensusSeqLines <- trimws(substring(consensusSeqLines, 8))
+    #consensusSeq <- unlist(strsplit(consensusSeqLine, " "))[length(unlist(strsplit(consensusSeqLine, " ")))]
+    #consensusSeq <- unlist(strsplit(consensusSeqLine, " "))[1]
+    consensusSeq <- paste(consensusSeqLines, collapse="")
     if (is.character(filename)) {
         writeLines(c(consensusSeq, consensusSS), con=filename)
     }
