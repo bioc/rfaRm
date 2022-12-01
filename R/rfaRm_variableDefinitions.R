@@ -8,10 +8,10 @@ rfamApiBaseURL <- 'http://rfam.org/family/'
 rfamApiSequenceSearchURL <- 'https://rfam.org/search/sequence'
 
 ## URL used to retrieve the list of clans defined in the Rfam database
-rfamClansListURL <- 'http://rfam.xfam.org/clans'
+rfamClansListURL <- 'https://rfam.org/clans'
 
 ## Base URL used to retrieve the Rfam families belonging to a specific clan
-rfamClanLookUpURL <- 'http://rfam.xfam.org/clan/'
+rfamClanLookUpURL <- 'https://rfam.org/clan/'
 
 ## OS
 localOS <- Sys.info()["sysname"]
