@@ -278,7 +278,14 @@ rfamSeedAlignment <- function(rfamFamily, filename=NULL, format="stockholm") {
         writeLines(alignment, con=filename)
     }
     if (is.element(format, c("stockholm", "pfam"))) {
-        return(readRNAMultipleAlignment(textConnection(alignment), "stockholm"))
+      markupPattern <- "(^\\s*|^#.*|^//\\s*)$"
+      rows <- readLines(textConnection(alignment))
+      markupLines <- grep(markupPattern, rows, perl = TRUE)
+      alnLines <- gaps(as(markupLines, "IRanges"), start = 1, 
+                       end = length(rows))
+      alnLines <- alnLines[width(alnLines) > 1][1]
+      goodRows <- extractROWS(rows, alnLines)
+      return(readRNAMultipleAlignment(textConnection(paste(c(rows[1], goodRows), collapse="\n")), "stockholm"))
     }
     else if (is.element(format, c("fasta", "fastau"))) {
         tmpFile <- tempfile()
