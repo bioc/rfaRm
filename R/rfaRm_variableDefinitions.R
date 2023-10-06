@@ -2,10 +2,13 @@
 rfamEbiApiURL <- 'https://www.ebi.ac.uk/ebisearch/ws/rest/rfam'
 
 ## Base URL used for most queries to the Rfam database
-rfamApiBaseURL <- 'http://rfam.org/family/'
+rfamApiBaseURL <- 'https://rfam.org/family/'
 
 ## Base URL used for sequence-based searches of the Rfam database
 rfamApiSequenceSearchURL <- 'https://rfam.org/search/sequence'
+rfamApiSequenceSearchURL2 <- 'https://search.rnacentral.org/api/submit-job'
+rfamApiSequenceSearchURL2Check <- "https://search.rnacentral.org/api/infernal-status/"
+rfamApiSequenceSearchURL2Retrieve <- "https://search.rnacentral.org/api/infernal-result/"
 
 ## URL used to retrieve the list of clans defined in the Rfam database
 rfamClansListURL <- 'https://rfam.org/clans'

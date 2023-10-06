@@ -23,3 +23,5 @@ importFrom('rsvg', rsvg)
 importFrom('stringi', stri_split_lines)
 importFrom("magick", image_read, image_write)
 importFrom("utils", read.delim, write.table)
+importFrom("jsonlite", toJSON)
+
