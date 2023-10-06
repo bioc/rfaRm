@@ -29,11 +29,31 @@ rfamSendSequenceSearchQuery <- function(sequence) {
         httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
         response <- with_config(config=httrConfig, POST(rfamApiSequenceSearchURL, 
                                                         accept_json(), body=queryBody,
-                                                        encode="multipart"))
+                                                        encode="multipart"), user_agent("Safari/601.3.9"))
     }
     else {
         response <- POST(rfamApiSequenceSearchURL, accept_json(), body=queryBody,
-                         encode="multipart")
+                         encode="multipart", user_agent("Safari/601.3.9"))
+    }
+    return(content(response))
+}
+
+rfamSendSequenceSearchQuery2 <- function(sequence) {
+    message("Running sequence search query. This might take a long time.")
+    queryBody <- toJSON(list(
+        query=sequence,
+        databases=list("Rfam"),
+        priority="high"
+    ), auto_unbox = TRUE)
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        response <- with_config(config=httrConfig, POST(rfamApiSequenceSearchURL2, 
+                                                        accept_json(), body=queryBody,
+                                                        encode="multipart"), user_agent("Safari/601.3.9"))
+    }
+    else {
+        response <- POST(rfamApiSequenceSearchURL2, accept_json(), body=queryBody,
+                         content_type_json())
     }
     return(content(response))
 }
@@ -50,6 +70,30 @@ rfamCheckSequenceSearchQuery <- function(responseURL) {
         response <- GET(responseURL, accept_json())
     }
     queryStatus <- status_code(response)
+    if (queryStatus == 202) {
+        message("Sequence search is running, please wait.")
+        return(queryStatus)
+    }
+    else if (queryStatus == 200) {
+        message("Sequence search completed successfully.")
+        return(queryStatus)
+    }
+    else {
+        message("Malformed query or server unavailable. Please try again.")
+        return(queryStatus)
+    }
+}
+
+rfamCheckSequenceSearchQuery2 <- function(responseURL) {
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        response <- with_config(config=httrConfig, GET(responseURL, accept_json()))
+    }
+    else {
+        response <- GET(responseURL, accept_json())
+    }
+    queryStatus <- content(response)$status
+    return(queryStatus)
     if (queryStatus == 202) {
         message("Sequence search is running, please wait.")
         return(queryStatus)
@@ -93,6 +137,45 @@ rfamRetrieveSequenceSearchResult <- function(responseURL) {
                                                                                    "alignmentMatch"=trimws(substring(hit$alignment$match, 10), which="both"),
                                                                                    "alignmentHitSequence"=unlist(strsplit(hit$alignment$hit_seq, split=" +"))[3],
                                                                                    "alignmentSecondaryStructure"=unlist(strsplit(hit$alignment$ss, split=" +"))[2]))
+    return(hitsList)
+}
+
+rfamRetrieveSequenceSearchResult2 <- function(resultURL) {
+    if(localOS == "Linux") {
+        httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
+        result <- with_config(config=httrConfig, GET(resultURL, accept_json()))
+    }
+    else {
+        result <- GET(resultURL, accept_json())
+    }
+    queryStatus <- status_code(result)
+    if (queryStatus != 200) {
+        stop("Sequence search has not completed")
+    }
+    autoparsedHits <- content(result)
+    hitsList <- lapply(autoparsedHits, function(hit) {
+        alignment <- hit$alignment
+        splitAlignment <- strsplit(alignment, "\n")[[1]]
+        secondaryStructure <- strsplit(splitAlignment[3], " +")[[1]][2]
+        hitSequence <- strsplit(splitAlignment[4], " +")[[1]][4]
+        querySequence <- strsplit(splitAlignment[6], " +")[[1]][4]
+        alignmentMatch <- substring(splitAlignment[5], 15)
+        list("rfamAccession"=hit$accession_rfam,
+             "bitScore"=hit$score,
+             "eValue"=hit$e_value,
+             "strand"=hit$strand,
+             "alignmentStartPositionQuerySequence"=hit$seq_from,
+             "alignmentEndPositionQuerySequence"=hit$seq_to,
+             "alignmentStartPositionHitSequence"=hit$mdl_from,
+             "alignmentEndPositionHitSequence"=hit$mdl_to,
+             "alignmentQuerySequence"=querySequence,
+             "alignmentMatch"=alignmentMatch,
+             "alignmentHitSequence"=hitSequence,
+             "alignmentSecondaryStructure"=secondaryStructure)
+        }
+    )
+    namesHits <- lapply(autoparsedHits, function(hit) {hit$target_name})
+    names(hitsList) <- namesHits
     return(hitsList)
 }
 
