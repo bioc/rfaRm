@@ -49,7 +49,7 @@ rfamSendSequenceSearchQuery2 <- function(sequence) {
         httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
         response <- with_config(config=httrConfig, POST(rfamApiSequenceSearchURL2, 
                                                         accept_json(), body=queryBody,
-                                                        encode="multipart"), user_agent("Safari/601.3.9"))
+                                                        encode="multipart"))
     }
     else {
         response <- POST(rfamApiSequenceSearchURL2, accept_json(), body=queryBody,
