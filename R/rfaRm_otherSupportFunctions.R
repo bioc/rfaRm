@@ -182,19 +182,33 @@ rfamRetrieveSequenceSearchResult2 <- function(resultURL) {
 ## Function to retrieve the complete set of clans defined in the Rfam database
 ## and the families belonging to each clan.
 
-rfamGetClanDefinitions <- function() {
+rfamGetClanDefinitions_old <- function() {
     clanHTMLTable <- html_table(xml_find_all(read_html(rfamClansListURL), "//table[@id]"))
     clanAccessions <- clanHTMLTable[[1]][,3][[1]]
     clanDefinitions <- vector(mode="list", length=length(clanAccessions))
     names(clanDefinitions) <- clanAccessions
     for (clan in clanAccessions) {
-        clanFamiliesHTMLnodes <- xml_find_all(read_html(paste(rfamClanLookUpURL, clan, sep="")), 
+        clanFamiliesHTMLnodes <- xml_find_all(read_html(paste(rfamClanLookUpURL, clan, sep="")),
                                               "//span[@class='listItem']")
         clanFamilies <- regmatches(clanFamiliesHTMLnodes, regexpr("RF[0123456789]{5}", clanFamiliesHTMLnodes))
         clanDefinitions[[clan]] <- clanFamilies
     }
     return(clanDefinitions)
 }
+
+rfamGetClanDefinitions <- function() {
+  clanMembershipCon <- gzcon(url("https://ftp.ebi.ac.uk/pub/databases/Rfam/CURRENT/database_files/clan_membership.txt.gz"))
+  clanMembershipTable <- read.delim(textConnection(readLines(clanMembershipCon)), header = FALSE)
+  clanAccessions <- unique(clanMembershipTable[,1])
+  clanDefinitions <- vector(mode="list", length=length(clanAccessions))
+  names(clanDefinitions) <- clanAccessions
+  for (clan in clanAccessions) {
+    clanFamilies <- clanMembershipTable[clanMembershipTable[,1] == clan,2]
+    clanDefinitions[[clan]] <- clanFamilies
+  }
+  return(clanDefinitions)
+}
+
 
 ## Function to identify hits of a sequence search that overlap.
 
