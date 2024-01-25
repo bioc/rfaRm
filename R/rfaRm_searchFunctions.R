@@ -29,6 +29,7 @@ rfamTextSearchFamilyAccession <- function(query) {
 ## times on the server side, which could lead to time-out errors.
 
 rfamSequenceSearch_oldApi <- function(sequence, fragmentsOverlap=1000, clanCompetitionFilter=TRUE, clanOverlapThreshold=0.5) {
+    sequence <- gsub("\r?\n|\r", "", sequence)
     checkMultipleQuery(sequence)
     checkRNAString(sequence)
     if (!(isTRUE(clanCompetitionFilter) | isFALSE(clanCompetitionFilter))) {
@@ -84,6 +85,7 @@ rfamSequenceSearch_oldApi <- function(sequence, fragmentsOverlap=1000, clanCompe
 
 
 rfamSequenceSearch <- function(sequence, fragmentsOverlap=1000, clanCompetitionFilter=TRUE, clanOverlapThreshold=0.5) {
+    sequence <- gsub("\r?\n|\r", "", sequence)
     checkMultipleQuery(sequence)
     checkRNAString(sequence)
     if (!(isTRUE(clanCompetitionFilter) | isFALSE(clanCompetitionFilter))) {
