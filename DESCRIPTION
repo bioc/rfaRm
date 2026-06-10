@@ -1,8 +1,8 @@
 Package: rfaRm
 Type: Package
 Title: An R interface to the Rfam database
-Version: 1.25.0
-Date: 2024-01-25
+Version: 1.25.1
+Date: 2026-06-10
 Author: Lara Selles Vidal, Rafael Ayala, Guy-Bart Stan, Rodrigo Ledesma-Amaro
 Maintainer: Lara Selles Vidal <lara.selles@oist.jp>,
             Rafael Ayala <rafael.ayala@oist.jp>
@@ -13,7 +13,7 @@ Description: rfaRm provides a client interface to the Rfam database of RNA
     structures in the dot-bracket format.
 License: GPL-3
 Imports: httr, stringi, rsvg, magick, data.table, Biostrings, utils, rvest, 
-         xml2, IRanges, S4Vectors, jsonlite
+         xml2, IRanges, S4Vectors
 Suggests: R4RNA, treeio, knitr, BiocStyle, rmarkdown, BiocGenerics, RUnit
 VignetteBuilder: knitr
 biocViews: FunctionalGenomics, DataImport, ThirdPartyClient, Visualization,
