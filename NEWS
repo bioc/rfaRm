@@ -1,3 +1,6 @@
+Changes in version 1.25.2 (2026-07-22)
++ Imported readRNAMultipleAlignment from the new MultipleAlignment package
+
 Changes in version 1.25.1 (2026-06-10)
 + Updated sequence search to use the new Rfam batch search API
 
