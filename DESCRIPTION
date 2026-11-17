@@ -1,11 +1,11 @@
 Package: rfaRm
 Type: Package
 Title: An R interface to the Rfam database
-Version: 1.25.2
-Date: 2026-07-22
+Version: 1.25.3
+Date: 2026-11-17
 Author: Lara Selles Vidal, Rafael Ayala, Guy-Bart Stan, Rodrigo Ledesma-Amaro
-Maintainer: Lara Selles Vidal <lara.selles@oist.jp>,
-            Rafael Ayala <rafael.ayala@oist.jp>
+Maintainer: Lara Selles Vidal <lara.selles@gmail.com>,
+            Rafael Ayala <rafaelayalahernandez@gmail.com>
 Description: rfaRm provides a client interface to the Rfam database of RNA 
     families. Data that can be retrieved include RNA families, secondary 
     structure images, covariance models, sequences within each family,

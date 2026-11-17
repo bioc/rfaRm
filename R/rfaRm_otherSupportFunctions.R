@@ -52,13 +52,17 @@ rfamCheckSequenceSearchQuery <- function(responseURL) {
         response <- GET(responseURL, accept_json())
     }
     queryStatus <- status_code(response)
+    # The API can return HTTP 200 before the search results are complete.
+    if (queryStatus == 200 && !isTRUE(nzchar(content(response)$closed))) {
+        queryStatus <- 202
+    }
     if (queryStatus == 202) {
         message("Sequence search is running, please wait.")
         return(queryStatus)
     }
     else if (queryStatus == 200) {
         message("Sequence search completed successfully.")
-        return(queryStatus)
+        return(structure(queryStatus, response=response))
     }
     else {
         message("Malformed query or server unavailable. Please try again.")
@@ -69,8 +73,11 @@ rfamCheckSequenceSearchQuery <- function(responseURL) {
 ## Function to retrieve the results of a completed query for a sequence-based
 ## search of the Rfam database.
 
-rfamRetrieveSequenceSearchResult <- function(responseURL) {
-    if(localOS == "Linux") {
+rfamRetrieveSequenceSearchResult <- function(responseURL, response=NULL) {
+    if (!is.null(response)) {
+        result <- response
+    }
+    else if(localOS == "Linux") {
         httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
         result <- with_config(config=httrConfig, GET(responseURL, accept_json()))
     }

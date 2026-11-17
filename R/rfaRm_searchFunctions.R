@@ -68,7 +68,8 @@ rfamSequenceSearch <- function(sequence, fragmentsOverlap=1000, clanCompetitionF
                 searchFinished <- TRUE
             }
         }
-        searchResult <- rfamRetrieveSequenceSearchResult(sendQueryResult$resultURL)
+        searchResult <- rfamRetrieveSequenceSearchResult(sendQueryResult$resultURL,
+                                                         response=attr(checkQueryStatus, "response"))
         for (hit in seq_len(length(searchResult))) {
             searchResult[[hit]]$alignmentStartPositionQuerySequence <- as.character(as.integer(searchResult[[hit]]$alignmentStartPositionQuerySequence)+fragmentStartPoints[fragment])
             searchResult[[hit]]$alignmentEndPositionQuerySequence <- as.character(as.integer(searchResult[[hit]]$alignmentEndPositionQuerySequence)+fragmentStartPoints[fragment])

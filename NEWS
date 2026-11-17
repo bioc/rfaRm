@@ -1,3 +1,9 @@
+Changes in version 1.25.3 (2026-11-17)
++ Wait for completed sequence search results even when the Rfam API returns HTTP 200 early, and parse the checked response
++ Fix SVG and sequence region retrieval by omitting unsupported Accept headers
++ Fix PDB mapping JSON retrieval and select fields by name
++ Updated maintainer email addresses
+
 Changes in version 1.25.2 (2026-07-22)
 + Imported readRNAMultipleAlignment from the new MultipleAlignment package
 

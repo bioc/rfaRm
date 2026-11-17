@@ -73,10 +73,10 @@ rfamSecondaryStructureXMLSVG <- function(rfamFamily, filename=NULL, plotType="no
     checkPlotType(plotType)
     if(localOS == "Linux") {
         httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
-        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep=""), accept_xml()))
+        result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep="")))
     }
     else {
-        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep=""), accept_xml())
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/image/", plotType, sep=""))
     }
     checkEmptyResponse(result)
     svg <- content(result, as="text")
@@ -147,12 +147,10 @@ rfamSequenceRegions <- function(rfamFamily, filename=NULL) {
     if(localOS == "Linux") {
         httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
         result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, 
-                                                           "/regions", sep=""),
-                                                     accept("text")))
+                                                           "/regions", sep="")))
     }
     else {
-        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/regions", sep=""),
-                      accept("text"))
+        result <- GET(paste(rfamApiBaseURL, rfamFamily, "/regions", sep=""))
     }
     if (status_code(result) == 403) {
         stop("The family has too many regions to list.")
@@ -230,17 +228,19 @@ rfamPDBMapping <- function(rfamFamily, filename=NULL) {
         httrConfig <- config(ssl_cipher_list="DEFAULT@SECLEVEL=1")
         result <- with_config(config=httrConfig, GET(paste(rfamApiBaseURL, rfamFamily, 
                                                            "/structures", sep=""),
-                                                     accept_json()))
+                                                     query=list("content-type"="application/json")))
     }
     else {
         result <- GET(paste(rfamApiBaseURL, rfamFamily, "/structures", sep=""),
-                      accept_json())
+                      query=list("content-type"="application/json"))
     }
     checkEmptyResponse(result)
     if (length(content(result)[[1]]) == 0){
         stop("No structures available in the PDB database for this family")
     }
-    PDBTable <- rbindlist(content(result)[[1]])[, c(3, 6, 7, 9, 8, 5, 1, 4, 2)]
+    PDBColumns <- c("rfam_acc", "pdb_id", "chain", "pdb_start", "pdb_end",
+                    "cm_start", "cm_end", "evalue_score", "bit_score")
+    PDBTable <- rbindlist(lapply(content(result)[[1]], `[`, PDBColumns))
     colnames(PDBTable) <- c("Rfam accession",
                             "PDB ID",
                             "Chain",
